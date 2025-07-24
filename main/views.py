@@ -37,7 +37,7 @@ class CatalogView(TemplateView):
         'color': lambda queryset, value: queryset.filter(color__iexact=value),
         'min_price': lambda queryset, value: queryset.filter(price_gte=value),
         'max_price': lambda queryset, value: queryset.filter(price_lte=value),
-        'size': lambda queryset, value: queryset.filter(Product_sizes_size_name=value),
+        'size': lambda queryset, value: queryset.filter(product_sizes__size__name=value),
     }
 
     def get_context_data(self, **kwargs):
@@ -51,7 +51,7 @@ class CatalogView(TemplateView):
             current_category = get_object_or_404(Category, slug=category_slug)
             products = products.filter(category=current_category)
 
-        query = self.request.get('q')
+        query = self.request.GET.get('q')
         if query:
             products = products.filter(Q(name__icontains=query) | Q(description__icontains=query))
 
@@ -96,7 +96,10 @@ class CatalogView(TemplateView):
             elif context.get('reset_search'):
                 return TemplateResponse(request, 'main/search_button.html', {})
             
-            template = 'main/filter_modal.html' if request.GET.get('show_filters') == 'true' else 'main/catalog.html'
+            if request.GET.get('show_filters') == 'true':
+                template = 'main/filter_modal.html' 
+            else:
+                template = 'main/catalog.html'
             return TemplateResponse(request, template, context)
         return TemplateResponse(request, self.template_name, context)
     
@@ -110,7 +113,7 @@ class ProductDetailView(DeleteView):
 
 
     def get_context_data(self, **kwargs):
-        context = self.get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         product = self.get_object()
         context['categories'] = Category.objects.all()
         context['related_product'] = Product.objects.filter(category=product.category).exclude(id=product.id)[:4]
