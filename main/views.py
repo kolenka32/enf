@@ -107,7 +107,7 @@ class ProductDetailView(DetailView):
         product = self.get_object()
         context['categories'] = Category.objects.all()
         context['related_products'] = Product.objects.filter(
-            categoty=product.category
+            category=product.category
         ).exclude(id=product.id)[:4]
         context['current_category'] = product.category.slug
         
