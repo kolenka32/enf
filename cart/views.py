@@ -83,6 +83,9 @@ class AddToCartView(CartMixin, View):
         request.session['cart_id'] = cart.id
         request.session.modified = True
 
+        print(size_id)
+
+        print(product.product_sizes.all())
         if request.headers.get('HX-Request'):
             return redirect('cart:cart_modal')
         else:

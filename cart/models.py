@@ -24,9 +24,9 @@ class Cart(models.Model):
     
     def add_product(self, product, product_size, quantity=1):
         cart_item, created = CartItem.objects.get_or_create(
-            cart=self,
-            product=product,
-            product_size=product_size,
+            cart = self,
+            product = product,
+            product_size = product_size,
             defaults={'quantity': quantity},
         )
         
@@ -35,8 +35,8 @@ class Cart(models.Model):
             cart_item.save()
             
         return cart_item
-    
-    
+        
+        
     def remove_item(self, item_id):
         try:
             item = self.items.get(id=item_id)
@@ -44,9 +44,9 @@ class Cart(models.Model):
             return True
         except CartItem.DoesNotExist:
             return False
-
-
-    def get_update_item_quantity(self, item_id, quantity):
+            
+        
+    def update_item_quantity(self, item_id, quantity):
         try:
             item = self.items.get(id=item_id)
             if quantity > 0:
@@ -55,14 +55,13 @@ class Cart(models.Model):
             else:
                 item.delete()
             return True
+        
         except CartItem.DoesNotExist:
             return False
         
-        
     def clear(self):
         self.items.all().delete()
-        
-
+    
 
 
 class CartItem(models.Model):

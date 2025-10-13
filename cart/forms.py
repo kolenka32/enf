@@ -30,5 +30,5 @@ class UpdateCartItemForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if self.instance and self.instance.product_size:
             self.fields['quantity'].validators.append(
-                forms.validstors.MaxValueValidator(self.instance.product_size.stock)
+                forms.validators.MaxValueValidator(self.instance.product_size.stock)
             )
